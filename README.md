@@ -181,3 +181,50 @@ y values in the column, and identity is the default setting to achieve that.
 
 `fill = variable` The fill of the barplot comes from the variables in the dataframe, so 
 we set the fill equal to whatever our variables are.
+
+## Grouping Within Barplots
+
+For this example, I am going to use a Titanic dataset from Kaggle, which can be found with this link: https://www.dropbox.com/s/00j17o6xzxsdjo4/titanictest.csv?dl=0
+
+Say we want to create a barplot that shows people who have survived and died, but we want to divide each column by gender. To do that, we would create a grouped barplot. First, we need to import our data and load libraries, and if you do not already have ggplot2 installed, install that package.
+
+```r
+# name data
+train = read.csv("~/downloads/traintitanic.csv", stringsAsFactors = FALSE, header = TRUE)
+
+# install packages and load them
+install.packages("ggplot2")
+library(ggplot2)
+```
+
+Now, we can begin to create the barplot. SIDENOTE: In the dataset under the "Survived" column, 0 = NO and 1 = YES. First, let's create some summary data about our data, to see the average fare paid by people who did and did not survive the shipwreck, but within this, this is separated by gender.
+
+```r
+summary_data <- tapply(train$Fare, list(sex = train$Sex,
+                                        survived = train$Survived),
+                       FUN = mean, na.rm = TRUE)
+summary_data
+> summary_data
+        survived
+sex             0        1
+  female 23.02439 51.93857
+  male   21.96099 40.82148
+  ```
+  
+  From this, we can see that people who did not survive the shipwreck usually paid less than people who did survive, and that on averag, women paid more than men for their ticket. Now, let's translate this into a barplot using the `barplot()` function:
+  
+```r
+barplot(summary_data, xlab = "Survived", ylab = "Fare",
+        beside = TRUE,
+        legend.text = rownames(summary_data),
+        args.legend = list(title = "Gender", x = "topright",
+                           inset = c(-.2,0)))
+```
+
+`summary_data` establishes that we want to pull data from the summary data we pulled earlier.
+
+`xlab` and `ylab` are labels for the x and y axes.
+
+`beside = TRUE` tells the computer to put the female and male columns next to each other in the graph.
+
+`args.legend` creates a legend in the graph.
