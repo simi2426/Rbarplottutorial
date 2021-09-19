@@ -41,6 +41,7 @@ This makes a very simple bar graph showing the counts for each variable.
 We can go deeper and make a barplot showing the average parental mean income for each college
 tier. First, we need to create a separate dataframe of averages of the college tiers. To do this, we are going to use the `aggregate()` function:
 
+### Create new dataframe
 ```r
 # load libraries
 library(ggplot2)
@@ -65,24 +66,38 @@ View(college.means)
 
 `FUN = mean` FUN is shorthand for function, so we are telling the computer the function that we want it to use is the mean.
 
+### Plot data
+Now, we are going to use `geom_col()` to actually graph the function. 
+
+```r
+ggplot() +
+  geom_col(data = college.means,
+           aes(x = college.means$collegetier,
+               y = college.means$pmean))
+
+```
+
+
 
 
 ## Creating a Barplot in Base R
 
-In base R, we can create items without using outside packages, such as GGPlot2. Here, we are going to create a barplot with the cohort dataset.
+In base R, we can create items without using outside packages, such as GGPlot2. Here, we are going to create a basic barplot of the counts of collegetier
 
 ```r
 # insert dataset and assign it a name
-co = read.csv("~/downloads/cohort.csv")
+college = read.csv("~/downloads/collegedata.csv")
 
 # create barplot
-barplot(cohort)
+barplot(college$collegetier)
 ```
 We can add different labels for the x and y axes or the main title.
 
 ```r
-barplot(cohort, xlab = "Parent Income",
-        ylab = "Count", main = "Parental Income")
+barplot(college$collegetier, xlab = "Counts",
+        ylab = "College Tier",
+        main = "Counts of Students in Each College Tier")
+
 ```
 
 
@@ -173,39 +188,44 @@ we set the fill equal to whatever our variables are.
 
 For this example, I am going to use a Titanic dataset from Kaggle, which can be found with this link: https://www.dropbox.com/s/00j17o6xzxsdjo4/titanictest.csv?dl=0
 
-Say we want to create a barplot that shows people who have survived and died, but we want to divide each column by gender. To do that, we would create a grouped barplot. First, we need to import our data and load libraries, and if you do not already have ggplot2 installed, install that package.
+Let's say we want to create a barplot showing the fare of men and women and if they were in first, second, or third class on the ship. 
 
 ```r
 # name data
-train = read.csv("~/downloads/traintitanic.csv", stringsAsFactors = FALSE, header = TRUE)
+train = read.csv("~/downloads/titanictest.csv", stringsAsFactors = FALSE, header = TRUE)
+View(train)
 
 # install packages and load them
 install.packages("ggplot2")
 library(ggplot2)
 ```
 
-Now, we can begin to create the barplot. SIDENOTE: In the dataset under the "Survived" column, 0 = NO and 1 = YES. First, let's create some summary data about our data, to see the average fare paid by people who did and did not survive the shipwreck, but within this, this is separated by gender.
+Now, we can begin to create the barplot.
 
 ```r
 summary_data <- tapply(train$Fare, list(sex = train$Sex,
-                                        survived = train$Survived),
+                                        pclass = train$Pclass),
                        FUN = mean, na.rm = TRUE)
 summary_data
+
 > summary_data
-        survived
-sex             0        1
-  female 23.02439 51.93857
-  male   21.96099 40.82148
+        pclass
+sex              1        2        3
+  female 115.59117 26.43875 13.73513
+  male    75.58655 20.18465 11.82635
   ```
   
-  From this, we can see that people who did not survive the shipwreck usually paid less than people who did survive, and that on averag, women paid more than men for their ticket. Now, let's translate this into a barplot using the `barplot()` function:
-  
+From this, we can see that women in first class on average paid more for their ticket than did anyone else.
+
+Now, let's graph the data:
 ```r
-barplot(summary_data, xlab = "Survived", ylab = "Fare",
+barplot.one = barplot(summary_data, xlab = "Class", ylab = "Fare",
         beside = TRUE,
         legend.text = rownames(summary_data),
-        args.legend = list(title = "Gender", x = "topright",
-                           inset = c(-.2,0)))
+        args.legend = list(title = "Gender",
+                           x = "topright",
+                           inset = c(.2,0)))
+
 ```
 
 `summary_data` establishes that we want to pull data from the summary data we pulled earlier.
