@@ -12,7 +12,7 @@ y variable:
 library(tidyverse)
 library(ggplot2)
 ```
-Now, we need to load in the dataset we are going to use, coming from the .csv file we named `collegedata.csv`
+Now, we need to load in the dataset we are going to use, coming from the .csv file we named `collegedata.csv` This can be downloaded at the Dropbox link here: https://www.dropbox.com/s/mxpl8uvcis148ip/collegedata.csv?dl=0
 We need to assign that dataset to a variable so it is easier to use within R, so we set it equal to the name
 `college`
 
