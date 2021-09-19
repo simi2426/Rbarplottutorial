@@ -13,6 +13,7 @@ library(tidyverse)
 library(ggplot2)
 ```
 Now, we need to load in the dataset we are going to use, coming from the .csv file we named `collegedata.csv` This can be downloaded at the Dropbox link here: https://www.dropbox.com/s/mxpl8uvcis148ip/collegedata.csv?dl=0
+
 We need to assign that dataset to a variable so it is easier to use within R, so we set it equal to the name
 `college`
 
@@ -36,16 +37,17 @@ barplot(table(college$collegetier))
 
 This makes a very simple bar graph showing the counts for each variable. 
 
+## Using averages for barplot height
 We can go deeper and make a barplot showing the average parental mean income for each college
 tier. First, we need to make a table to simplify the data so it is easier to code.
 
 ```r
 table = college %>% group_by(collegetier) %>%
   summarize(avg_pmean = mean(pmean))
-view(table)
+View(table)
 ```
 
-`%>%` this function is a pipe operator, and is similar in use to an f(x) function. It is in the `dplyr`
+`%>%` - this function is a pipe operator, and is similar in use to an f(x) function. It is in the `dplyr`
 package, so make sure that is loaded before using this function. Here, it allows us to name this function `table` while also allowing us to tell the computer to use the `college` dataset and use the `group_by` function simultaneously.
 
 `group_by` this function allows us to choose the variable we want to categorize
