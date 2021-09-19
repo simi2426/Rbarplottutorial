@@ -39,48 +39,33 @@ This makes a very simple bar graph showing the counts for each variable.
 
 ## Using averages for barplot height
 We can go deeper and make a barplot showing the average parental mean income for each college
-tier. First, we need to make a table to simplify the data so it is easier to code.
+tier. First, we need to create a separate dataframe of averages of the college tiers. To do this, we are going to use the `aggregate()` function:
 
 ```r
-table = college %>% group_by(collegetier) %>%
-  summarize(avg_pmean = mean(pmean))
-View(table)
+# load libraries
+library(ggplot2)
+
+# import college dataset
+college = read.csv("~/downloads/collegedata.csv")
+
+# create new dataframe
+college.means = aggregate(x = college,
+                          by = list(college$collegetier),
+                          FUN = mean)
+View(college.means)
 ```
 
-`%>%` - this function is a pipe operator, and is similar in use to an f(x) function. It is in the `dplyr`
-package, so make sure that is loaded before using this function. Here, it allows us to name this function `table` while also allowing us to tell the computer to use the `college` dataset and use the `group_by` function simultaneously.
+`college.means` is the name of our new dataframe
 
-`group_by` this function allows us to choose the variable we want to categorize
-our barplot with.
+`aggregate()` this function is used to group multiple data points together for a singular value rather than multiple datapoints
 
-`avg_pmean = mean(pmean)` this sets the other half of the table, the response, as the
-average of the mean parental income. This function tells the computer to split up the parental mean income by college tier, and to then find the mean parental income of each college tier. So, our graph will show the parental mean income of each college tier.
+`x = college` this is referring to the dataset we are pulling from, which is the `college` dataset
 
-```r
-table %>% ggplot(aes(x = collegetier, y = avg_pmean)) +
-  geom_col(aes(fill = collegetier)) + 
-  labs(title = "Parental Income and College Tier", x = "College Tier", 
-       y = "Parental Mean Income") 
+`by = list(college$collegetier` This tells the computer which variable we want to sort the data by, which is college tier
 
-```
-Now, we have a graph where the x axis is each college tier, and the height, or y axis, is determined by the mean parental income of that college tier.
+`FUN = mean` FUN is shorthand for function, so we are telling the computer the function that we want it to use is the mean.
 
-We set the x variable to college tier, and the height to the parental mean income, the variable we created earlier. 
 
-`geom_col` makes the heights of graphs representative of values in the data, while
-`geom_bar` makes the heights of the graphs representative of the counts in the data. For example, if we used `geom_bar`, the height of each column would be representative of how many cases are in each tier. For example, if there were 60 people in the first tier, the height of tier 1 would be 60, not the parental mean income.
-
-`labs` assigns labels to the axes
-
-If we wanted to flip the axes, we can use the `coord_flip()` function
-
-```r
-table %>% ggplot(aes(x = collegetier, y = avg_pmean)) +
-  geom_col(aes(fill = collegetier)) +
-  labs(title = "Parental Income and College Tier", x = "College Tier",
-       y = "Parental Mean Income") +
-  coord_flip()
-```
 
 ## Creating a Barplot in Base R
 
